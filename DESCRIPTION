@@ -1,0 +1,30 @@
+Package: nmr.peaks
+Title: Classes for NMR peak modelling
+Version: 0.0.1
+Authors@R: 
+    c(person(given="Andrés", family="Bernal", email= "AndresFernando.BernalEscobar@murdoch.edu.au", 
+            role = c("aut", "cre"), comment = c(ORCID = "0000-0003-1668-7225")),
+            person(given = "Andrés", family = "Castillo", role = "aut",
+            email = "Andres.CastilloRobles@murdoch.edu.au"),
+            person(given = "Julien",
+            family = "Wist",
+            role = "aut",
+            email = "julien.wist@murdoch.edu.au",
+           comment = c(ORCID = "0000-0002-3416-2572")))
+Description: Tools to work with pseudo-Voigt representations of 1D NMR peaks.
+ Includes class definitions for signals (collections of peaks
+ originating in a single resonance), and signal models (collection of overlapping
+ signals spanning). Developed for quantification.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Imports: 
+    crayon,
+    methods,
+    jsonlite
+Depends: 
+    R (>= 2.10)
