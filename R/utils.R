@@ -23,7 +23,9 @@ signalToY <- function(signal,ppm){
 #'  offset by \emph{n} x linewidth (fwhm)
 #' @param signal, \code{\linkS4class{NMRSignal1D}}
 #' @param n numeric, linewidth multiplier used to offset the outer peaks
-#' @returns numeric, the extremes of the signal's domain
+#' @details This function intends to provide a pragmatic answer to the question
+#' of where does a signal "start" and "end".
+#' @returns numeric, the chemical shift coordinates of the boundaries of the signal's domain
 #' @export
 signalDomain <- function(signal, n=3){
   if ("NMRSignal1D" %in% is(signal)){
@@ -34,4 +36,46 @@ signalDomain <- function(signal, n=3){
   cat(crayon::red("signalDomain >>"
                   ,"Argument is not a S4 fusion::NMRSignal1D object"))
   stop()
+}
+
+#' Change the chemical shift of a \code{\linkS4class{NMRSignal1D}}
+#' 
+#' @param signal, \code{\linkS4class{NMRSignal1D}}
+#' @param to, numeric, optional, new chemical shift coordinate
+#' @param by, numeric, optional, shift to apply
+#' @param hertz, logic, is \code{by} given in Hz (TRUE), or in chemical shift units
+#' (FALSE, defauilt)?
+#' @param SF, spectrometer field, in MHz. Only used if \code{hertz=TRUE}. Default 600 
+#' @details If \code{to} is provided, the signal is shifted to the given chemical shift.
+#' Otherwise, if \code{by} is provided, the signal is shifted by the given ppm.
+#' Else, the signal is left unshifted
+#' @return \code{\linkS4class{NMRSignal1D}}, the shifted signal
+#' @export
+shiftSignal <- function(signal, to, by=0, hertz=FALSE, SF=600){
+  if (!missing(to)) by <- to[1] - signal@chemicalShift
+  #Note how careles I am about combining "to" with "hertz=TRUE", because I am
+  #not sure what would be the appropriate output anyway
+  if (hertz) by <- by[1] / SF
+  signal@peaks <- lapply(signal@peaks, function(p){
+    p@x <- p@x + by[1]
+    return(p)
+  })
+  signal@chemicalShift <- signal@chemicalShift + by
+  return(signal)
+}
+
+#' Scale the intensity of a \code{\linkS4class{NMRSignal1D}}
+#' 
+#' @param to, numeric, optional, new maximum intensity
+#' @param by, optional, height scaling factor
+#' @details If \code{to} is provided, the signal is scaled up so that its maximum
+#' intensity matches the parameter. Otherwise, if \code{by} is provided, the 
+#' signal is scaled by the given factor. Else, the signal is left unscaled
+scaleSignal <- function(signal, to, by=1){
+  if (!missing(to)) by <- to / max(sapply(signal@peaks, function(p) p@y))
+  signal@peaks <- lapply(signal@peaks, function(p){
+    p@y <- p@y * by
+    return(p)
+  })
+  return(signal)
 }
