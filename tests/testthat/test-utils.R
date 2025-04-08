@@ -41,3 +41,39 @@ test_that("signalToY works", {
                            ) + fpseudoVoigt(xx=ppm,mean=5.4207,max=1,fwhm=0.0015,mu=0.85)
   expect_equal(signalToY(sucrose,ppm),handmade)
 })
+
+test_that("scaleSignal works", {
+  sucrose <- new("NMRSignal1D"
+                 ,id="Sucrobation"
+                 ,chemicalShift=5.416
+                 ,shape=list(name="pseudoVoigt"
+                             ,params = list(mu=0.85,fwhm=0.0015,base=0)
+                 )
+                 ,peaks = list(new("NMRPeak1D",x=5.4113, y=0.5)
+                               ,new("NMRPeak1D",x=5.4207, y=0.5)
+                 )
+  )
+  expect_equal(scaleSignal(sucrose,2)@peaks[[1]]@y, scaleSignal(sucrose,2)@peaks[[2]]@y)
+  expect_equal(scaleSignal(sucrose,2)@peaks[[1]]@y, 2)
+  expect_equal(scaleSignal(sucrose,by=2)@peaks[[1]]@y, scaleSignal(sucrose,by=2)@peaks[[2]]@y)
+  expect_equal(scaleSignal(sucrose,by=2)@peaks[[1]]@y, 1)
+})
+
+test_that("shiftSignal works", {
+  sucrose <- new("NMRSignal1D"
+                 ,id="Sucrobation"
+                 ,chemicalShift=5.416
+                 ,shape=list(name="pseudoVoigt"
+                             ,params = list(mu=0.85,fwhm=0.0015,base=0)
+                 )
+                 ,peaks = list(new("NMRPeak1D",x=5.4113, y=1)
+                               ,new("NMRPeak1D",x=5.4207, y=1)
+                 )
+  )
+  expect_equal(shiftSignal(sucrose,5.5)@peaks[[1]]@x, 5.5 -0.0047)
+  expect_equal(shiftSignal(sucrose,5.5)@peaks[[2]]@x, 5.5 + 0.0047)
+  expect_equal(shiftSignal(sucrose,5.5)@chemicalShift, 5.5)
+  expect_equal(shiftSignal(sucrose,by=0.5)@peaks[[1]]@x, 5.4113 + 0.5)
+  expect_equal(shiftSignal(sucrose,by=0.5)@peaks[[2]]@x, 5.4207 + 0.5)
+  expect_equal(shiftSignal(sucrose,by=0.5)@chemicalShift, 5.416 + 0.5)
+})

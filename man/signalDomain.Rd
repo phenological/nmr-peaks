@@ -12,9 +12,13 @@ signalDomain(signal, n = 3)
 \item{n}{numeric, linewidth multiplier used to offset the outer peaks}
 }
 \value{
-numeric, the extremes of the signal's domain
+numeric, the chemical shift coordinates of the boundaries of the signal's domain
 }
 \description{
 Estimates the domain of the signal as the coordinates of the outer peaks
 offset by \emph{n} x linewidth (fwhm)
+}
+\details{
+This function intends to provide a pragmatic answer to the question
+of where does a signal "start" and "end".
 }

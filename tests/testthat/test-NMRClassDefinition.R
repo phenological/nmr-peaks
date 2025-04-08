@@ -204,25 +204,25 @@ test_that("Check that toJSONFile file works on NMRSignalModel", {
 #   expect_equal(analyte1, analyte1_resurrected)
 # })
 
-test_that("Check that toJSONFile file works on vector", {
-
-})
-
-test_that("Check that toJSONFile file works on list", {
-
-})
-
-test_that("Check that toJSONFile file works on numeric", {
-
-})
-
-test_that("Check that toJSONFile file works on logical", {
-
-})
-
-test_that("Check that toJSONFile file works on character", {
-
-})
+# test_that("Check that toJSONFile file works on vector", {
+# 
+# })
+# 
+# test_that("Check that toJSONFile file works on list", {
+# 
+# })
+# 
+# test_that("Check that toJSONFile file works on numeric", {
+# 
+# })
+# 
+# test_that("Check that toJSONFile file works on logical", {
+# 
+# })
+# 
+# test_that("Check that toJSONFile file works on character", {
+# 
+# })
 
 test_that("Check that fromVector works with NA", {
   ppm <-1:10

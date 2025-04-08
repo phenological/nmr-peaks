@@ -66,11 +66,14 @@ shiftSignal <- function(signal, to, by=0, hertz=FALSE, SF=600){
 
 #' Scale the intensity of a \code{\linkS4class{NMRSignal1D}}
 #' 
+#' @param signal, \code{\linkS4class{NMRSignal1D}}
 #' @param to, numeric, optional, new maximum intensity
 #' @param by, optional, height scaling factor
-#' @details If \code{to} is provided, the signal is scaled up so that its maximum
+#' @details If \code{to} is provided, the signal is scaled so that its maximum
 #' intensity matches the parameter. Otherwise, if \code{by} is provided, the 
 #' signal is scaled by the given factor. Else, the signal is left unscaled
+#' @return \code{\linkS4class{NMRSignal1D}}, the scaled signal
+#' @export
 scaleSignal <- function(signal, to, by=1){
   if (!missing(to)) by <- to / max(sapply(signal@peaks, function(p) p@y))
   signal@peaks <- lapply(signal@peaks, function(p){

@@ -16,13 +16,13 @@ integral(nmr, method, ...)
 
 \S4method{integral}{NMRSignalModel,character}(nmr, method)
 
-\S4method{integral}{NMRSignal1D,`function`}(nmr, method)
+\S4method{integral}{NMRSignal1D,function}(nmr, method)
 
-\S4method{integral}{NMRSignalModel,`function`}(nmr, method)
+\S4method{integral}{NMRSignalModel,function}(nmr, method)
 
 \S4method{integral}{list,character}(nmr, method)
 
-\S4method{integral}{list,`function`}(nmr, method)
+\S4method{integral}{list,function}(nmr, method)
 }
 \arguments{
 \item{nmr}{a \code{\linkS4class{NMRSignalModel}}, \code{\linkS4class{NMRSignal1D}}
