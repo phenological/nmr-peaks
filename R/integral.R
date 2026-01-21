@@ -50,22 +50,8 @@ setMethod("integral"
             cat(crayon::red("nmrSpectraProcessing::integral >>"
                             ,"invalid integration method"
                             ,"for NMRSignal1D object"))
+            stop("Abort")
           })
-
-# #' @rdname integral-methods
-# #' @aliases integral,NMRPeak1D,character-method
-# setMethod("integral"
-#           ,signature(nmr = "NMRPeak1D", method="character")
-#           ,definition = function(nmr, method) {
-#             if (grepl("^f",method)){
-#               mu <- nmr@shape$param$mu
-#               w <- nmr@shape$param$fwhm
-#               h <- nmr@shape$param$y
-#               return(sum(mu * w * h) * pi / 2 + sum((1-mu) * w * h) * 1.064467)
-#             }
-#             cat(crayon::red("nmrSpectraProcessing::integral >>"
-#                             ,"invalid integration method for NMRPeak1D object"))
-#           })
           
 #' @describeIn integral NMRSignalModel method
 #' @returns numeric, a vector of integrals for each signal in the NMRSignalModel
@@ -91,6 +77,7 @@ setMethod("integral"
             cat(crayon::red("nmrSpectraProcessing::integral >>"
                             ,"invalid integration method for"
                             ,"NMRSignalModel1D object"))
+            stop("Abort")
           })
 
 # #' @rdname integral-methods
@@ -124,6 +111,7 @@ setMethod("integral"
               return(sum(nmr$y) * (nmr$x[2] - nmr$x[1]))
             cat(crayon::red("nmrSpectraProcessing::integral >>"
                             ,"invalid method"))
+            stop("Abort")
           })
 
 #' @describeIn integral x,y data series method with custom integration function

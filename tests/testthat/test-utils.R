@@ -77,3 +77,58 @@ test_that("shiftSignal works", {
   expect_equal(shiftSignal(sucrose,by=0.5)@peaks[[2]]@x, 5.4207 + 0.5)
   expect_equal(shiftSignal(sucrose,by=0.5)@chemicalShift, 5.416 + 0.5)
 })
+
+
+
+test_that("simulateSignal works", {
+  expect_no_error(
+    simulateSignal(2)
+  )
+  expect_no_error(
+    simulateSignal(2,multiplicity="s")
+  )
+  expect_no_error(
+    simulateSignal(5.4,10)
+  )
+  expect_no_error(
+    simulateSignal(1.9,8,"t")
+  )
+  expect_no_error(
+    simulateSignal(7.18,j=c(5,3,2,1),"tddd")
+  )
+  expect_no_error(
+    simulateSignal(7.18,j=c(5,3,2,1),"tddd",fwhm=1.5,frequency=400,mu=0.7)
+  )
+  
+  expect_error(
+    simulateSignal(5,multiplicity="d")
+  )
+  
+  s1 <- simulateSignal(1.9,intensity=5,linewidth=1.2,mu=0.8,frequency=800)
+  expect_equal(s1@shape$params$mu,0.8)
+  expect_equal(s1@shape$params$fwhm,1.2/800)
+  expect_equal(s1@chemicalShift,1.9)
+  expect_equal(s1@multiplicity,"s")
+  expect_equal(length(s1@peaks),1)
+  expect_equal(s1@peaks[[1]]@x,1.9)
+  expect_equal(s1@peaks[[1]]@y,5)
+  
+  s2 <- simulateSignal(1.9,multiplicity="s",intensity=5,fwhm=1.2,mu=0.8,frequency=800)
+  expect_equal(s1,s2)
+  
+  s1 <- simulateSignal(5.4,12)
+  expect_equal(s1@chemicalShift,5.4)
+  expect_equal(length(s1@peaks),2)
+  expect_equal(s1@peaks[[2]]@x,5.41)
+  expect_equal(s1@multiplicity,"d")
+  
+  s2 <- simulateSignal(5.4,12,multiplicity="d")
+  expect_equal(s1,s2)
+  
+  s1 <- simulateSignal(1.9,8,"t")
+  expect_equal(sapply(s1@peaks, function(p) p@y),c(0.5,1,0.5))
+  
+  s1 <- simulateSignal(2.7,c(120,12),"dd")
+  expect_equal(s1@multiplicity,"dd")
+  expect_equal(s1@peaks[[4]]@x,2.81)
+})
