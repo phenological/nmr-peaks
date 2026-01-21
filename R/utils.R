@@ -154,9 +154,27 @@ simulateSignal <- function(cshift, j=NULL, multiplicity = NULL,frequency=600
   
   #Split multiplet
   if(length(j) > 0){
-    #canonize
-    ##unique j. This can be inefficient but ensures consistency
-    j <- unique(j)
+    #pair j with m
+    ##More multiplicities than j's? Can only be an error
+    if(length(j) < length(m)){
+      cat(crayon::red("nmrPeaks::simulateSignal >> missing some coupling constant(s). Check your j and multiplicity arguments."))
+      stop("Abort") 
+    }
+    #More j's than multiplicities? 
+    if(length(j) > length(m)){
+      # Could be multiplicity string provided and j specified for each proton
+      if (length(unique(j)) == length(m)){
+        #in that case, removing duplicates sets us up to expand the multiplet correctly
+        j <- unique(j)
+      }
+      else{
+        cat(crayon::red("nmrPeaks::simulateSignal >> too many coupling constant(s)! Check your j and multiplicity arguments."))
+        stop("Abort") 
+      }
+    }
+    
+    #now j is assured to match m
+    
     ##decreasing j order. Cosmetic only?
     o <- order(j,decreasing = TRUE)
     j <- j[o]
