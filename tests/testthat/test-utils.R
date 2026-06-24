@@ -54,7 +54,7 @@ test_that("scaleSignal works", {
                  )
   )
   expect_equal(scaleSignal(sucrose,2)@peaks[[1]]@y, scaleSignal(sucrose,2)@peaks[[2]]@y)
-  expect_equal(scaleSignal(sucrose,2)@peaks[[1]]@y, 2)
+  expect_equal(round(scaleSignal(sucrose,2)@peaks[[1]]@y), 2)
   expect_equal(scaleSignal(sucrose,by=2)@peaks[[1]]@y, scaleSignal(sucrose,by=2)@peaks[[2]]@y)
   expect_equal(scaleSignal(sucrose,by=2)@peaks[[1]]@y, 1)
 })
@@ -126,7 +126,7 @@ test_that("simulateSignal works", {
   expect_equal(s1,s2)
   
   s1 <- simulateSignal(1.9,8,"t")
-  expect_equal(sapply(s1@peaks, function(p) p@y),c(0.5,1,0.5))
+  expect_equal(round(sapply(s1@peaks, function(p) p@y),2),c(0.5,1,0.5))
   
   s1 <- simulateSignal(2.7,c(120,12),"dd")
   expect_equal(s1@multiplicity,"dd")

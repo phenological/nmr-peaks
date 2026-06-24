@@ -4,7 +4,7 @@
 \alias{scaleSignal}
 \title{Scale the intensity of a \code{\linkS4class{NMRSignal1D}}}
 \usage{
-scaleSignal(signal, to, by = 1)
+scaleSignal(signal, to, by, points = 1000)
 }
 \arguments{
 \item{signal, }{\code{\linkS4class{NMRSignal1D}}}
@@ -12,6 +12,9 @@ scaleSignal(signal, to, by = 1)
 \item{to, }{numeric, optional, new maximum intensity}
 
 \item{by, }{optional, height scaling factor}
+
+\item{interp, }{numeric, number of points to interpolate to approximate
+the maximum. See details}
 }
 \value{
 \code{\linkS4class{NMRSignal1D}}, the scaled signal
@@ -23,4 +26,10 @@ Scale the intensity of a \code{\linkS4class{NMRSignal1D}}
 If \code{to} is provided, the signal is scaled so that its maximum
 intensity matches the parameter. Otherwise, if \code{by} is provided, the
 signal is scaled by the given factor. Else, the signal is left unscaled
+
+Either \code{to} or \code{by} must be given. If both are given,
+\code{by} is given priority. To reach the target intensity when \code{by}
+was not provided and there are multiple peaks, the function samples \code{interp}
+equidistant points between the leftmost peak and the rightmost peak (inclusive)
+to determine the current max.height, and then scales all peaks by intensity/max.height
 }

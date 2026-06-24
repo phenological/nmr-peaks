@@ -69,13 +69,29 @@ shiftSignal <- function(signal, to, by=0, hertz=FALSE, SF=600){
 #' @param signal, \code{\linkS4class{NMRSignal1D}}
 #' @param to, numeric, optional, new maximum intensity
 #' @param by, optional, height scaling factor
+#' @param interp, numeric, number of points to interpolate to approximate 
+#' the maximum. See details
 #' @details If \code{to} is provided, the signal is scaled so that its maximum
 #' intensity matches the parameter. Otherwise, if \code{by} is provided, the 
 #' signal is scaled by the given factor. Else, the signal is left unscaled
 #' @return \code{\linkS4class{NMRSignal1D}}, the scaled signal
+#' @details Either \code{to} or \code{by} must be given. If both are given,
+#' \code{by} is given priority. To reach the target intensity when \code{by} 
+#' was not provided and there are multiple peaks, the function samples \code{interp} 
+#' equidistant points between the leftmost peak and the rightmost peak (inclusive)
+#' to determine the current max.height, and then scales all peaks by intensity/max.height
 #' @export
-scaleSignal <- function(signal, to, by=1){
-  if (!missing(to)) by <- to / max(sapply(signal@peaks, function(p) p@y))
+scaleSignal <- function(signal, to, by, points=1000){
+  if (missing(by)){
+    if (length(signal@peaks) == 1){
+      by <- to / signal@peaks[[1]]@y
+    } else{
+      x <- sapply(signal@peaks,function(p) p@x)
+      x <- seq(from=min(x),to=max(x),length.out=1000)
+      by <- to / max(signalToY(signal,x))
+    }
+  }
+  # if (!missing(to)) by <- to / max(sapply(signal@peaks, function(p) p@y))
   signal@peaks <- lapply(signal@peaks, function(p){
     p@y <- p@y * by
     return(p)
@@ -198,14 +214,14 @@ simulateSignal <- function(cshift, j=NULL, multiplicity = NULL,frequency=600
     px <- as.numeric(names(px))
     
     #scale height
-    py <- py / max(py)
-    py <- py * intensity
+    # py <- py / max(py)
+    # py <- py * intensity
   }
   
   
   
   #Create NMRSignal1D
-  new("NMRSignal1D"
+  res <- new("NMRSignal1D"
       ,nbAtoms = nbAtoms
       ,multiplicity = multiplicity
       ,chemicalShift = cshift
@@ -214,5 +230,7 @@ simulateSignal <- function(cshift, j=NULL, multiplicity = NULL,frequency=600
         new("NMRPeak1D", x=px[j], y=py[j])
       })
   )
+  #scale to requested intensity
+  scaleSignal(res,to=intensity)
 }
 
